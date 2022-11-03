@@ -9,7 +9,7 @@ html {
 }
 
 body {
-  min-width: 320px;
+  min-width: 290px;
   min-height: 100vh;
   font-family: 'SF UI Display', sans-serif;
   font-size: 16px;
@@ -56,4 +56,15 @@ p {
 .visually-hidden {
   position: fixed;
   transform: scale(0);
+}
+
+@media (max-width: 740px) {
+  body {
+    padding-bottom: 187px;
+  }
+}
+@media (max-width: 968px) {
+  body {
+    padding-bottom: 217px;
+  }
 }

@@ -137,3 +137,77 @@
 .player__icon_mute-off {
   background-image: url('../img/volume-off.svg');
 }
+
+@media (max-width: 1024px) {
+  .player__container {
+    grid-template-columns: 1fr 1fr 2fr 1fr;
+  }
+}
+
+@media (max-width: 968px) {
+  .player {
+    right: 34px;
+    left: 34px;
+    padding: 22px 60px;
+    border-radius: 30px;
+  }
+  .player__container {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 27px 20px;
+  }
+  .player_active {
+    bottom: 24px;
+  }
+  .player__progress-wrap {
+    order: 1;
+    grid-column: 1 / -1;
+  }
+  .player__progress {
+    max-width: none;
+  }
+  .player__volume-wrap {
+    justify-self: end;
+  }
+  .player__controller {
+    justify-self: center;
+  }
+}
+
+@media (max-width: 740px) {
+  .player {
+    bottom: 0;
+    border-radius: 20px 20px 0 0;
+  }
+  .player__container {
+    grid-template-columns: 1fr 1fr;
+    gap: 27px 20px;
+  }
+  .player__volume-wrap {
+    display: none;
+  }
+  .player__controller {
+    justify-self: right;
+  }
+}
+
+@media (max-width: 560px) {
+  .player {
+    right: 0;
+    left: 0;
+    padding: 16px 15px;
+  }
+  .player__container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .player__controller {
+    justify-self: center;
+  }
+  .player__track-info {
+    justify-self: center;
+    text-align: center;
+  }
+  .player__progress-wrap {
+    padding-left: 0;
+  }
+}
