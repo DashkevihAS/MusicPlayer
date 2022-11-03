@@ -65,6 +65,12 @@
   transition: background-color 0.3s ease-in-out;
   opacity: 1;
 }
+.track_active_paused .track__img-wrap::after {
+  transform: translate(-50%, -50%) rotateY(0deg);
+  background-image: url('../img/play.svg');
+  transition: background-color 0.3s ease-in-out;
+  opacity: 1;
+}
 
 .track_active:hover .track__img-wrap::after {
   background-color: #fff;
