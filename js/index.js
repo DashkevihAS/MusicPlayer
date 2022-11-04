@@ -97,6 +97,9 @@ const prevBtn = document.querySelector('.player__controller-prev');
 const nextBtn = document.querySelector('.player__controller-next');
 const likeBtn = document.querySelector('.player__controller-like');
 const muteBtn = document.querySelector('.player__controller-mute');
+const playerProgressInput = document.querySelector('.player__progress-input');
+const playerTimePassed = document.querySelector('.player__time-passed');
+const playerTimeTotal = document.querySelector('.player__time-total');
 
 const catalogAddBtn = document.createElement('button');
 catalogAddBtn.classList.add('catalog__btn-add');
@@ -138,6 +141,7 @@ const pausePlayer = () => {
 
 const playMusic = (event) => {
   event.preventDefault();
+
   const trackActive = event.currentTarget;
 
   if (trackActive.classList.contains('track_active')) {
@@ -218,6 +222,26 @@ const checkCount = (i = 1) => {
   }
 };
 
+const updateTime = () => {
+  const currentTime = audio.currentTime;
+  const duration = audio.duration;
+  const progress = (currentTime / duration) * 1000;
+  playerProgressInput.value = progress ? progress : 0;
+
+  const minutesPassed = Math.floor(currentTime / 60) || '0';
+  const secondsPassed = Math.floor(currentTime % 60) || '0';
+
+  const minutesDuration = Math.floor(duration / 60) || '0';
+  const secondsDuration = Math.floor(duration % 60) || '0';
+
+  playerTimePassed.textContent = `${minutesPassed}:${
+    secondsPassed < 10 ? '0' + secondsPassed : secondsPassed
+  }`;
+  playerTimeTotal.textContent = `${minutesDuration}:${
+    secondsDuration < 10 ? '0' + secondsDuration : secondsDuration
+  }`;
+};
+
 const init = () => {
   renderCatalog(dataMusic);
   checkCount();
@@ -232,6 +256,11 @@ const init = () => {
 
   prevBtn.addEventListener('click', playMusic);
   nextBtn.addEventListener('click', playMusic);
+  audio.addEventListener('timeupdate', updateTime);
+  playerProgressInput.addEventListener('change', () => {
+    const progress = playerProgressInput.value;
+    audio.currentTime = audio.duration * (progress / 1000);
+  });
 };
 
 init();
