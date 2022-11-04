@@ -85,7 +85,15 @@ const dataMusic = [
   },
 ];
 
+let playlist = [];
+
+const favoriteList = localStorage.getItem('favorite')
+  ? JSON.parse(localStorage.getItem('favorite'))
+  : [];
+
 const audio = new Audio();
+const headerLogo = document.querySelector('.header__logo');
+const headerFavoriteBtn = document.querySelector('.header__favourite-btn');
 
 const tracksCard = document.getElementsByClassName('track');
 const catalogContainer = document.querySelector('.catalog__container');
@@ -96,12 +104,16 @@ const stopBtn = document.querySelector('.player__controller-stop');
 const prevBtn = document.querySelector('.player__controller-prev');
 const nextBtn = document.querySelector('.player__controller-next');
 const likeBtn = document.querySelector('.player__controller-like');
-const muteBtn = document.querySelector('.player__controller-mute');
 const playerProgressInput = document.querySelector('.player__progress-input');
+
 const playerTimePassed = document.querySelector('.player__time-passed');
 const playerTimeTotal = document.querySelector('.player__time-total');
 
+const playerVolumeInput = document.querySelector('.player__volume-input');
+const muteBtn = document.querySelector('.player__controller-mute');
+
 const catalogAddBtn = document.createElement('button');
+
 catalogAddBtn.classList.add('catalog__btn-add');
 catalogAddBtn.innerHTML = `
   <span>Увидееть всё</span>
@@ -150,7 +162,15 @@ const playMusic = (event) => {
   }
   let i = 0;
   const id = trackActive.dataset.idTrack;
-  const track = dataMusic.find((data, index) => {
+
+  const index = favoriteList.indexOf(id);
+  if (index !== -1) {
+    likeBtn.classList.add('player__icon_like_active');
+  } else {
+    likeBtn.classList.remove('player__icon_like_active');
+  }
+
+  const track = playlist.find((data, index) => {
     i = index;
     return data.id === id;
   });
@@ -159,11 +179,12 @@ const playMusic = (event) => {
   pauseBtn.classList.remove('player__icon_play');
   player.classList.add('player_active');
 
-  const prevTrack = i === 0 ? dataMusic.length - 1 : i - 1;
-  const nextTrack = i === dataMusic.length - 1 ? 0 : i + 1;
+  const prevTrack = i === 0 ? playlist.length - 1 : i - 1;
+  const nextTrack = i === playlist.length - 1 ? 0 : i + 1;
 
-  prevBtn.dataset.idTrack = dataMusic[prevTrack].id;
-  nextBtn.dataset.idTrack = dataMusic[nextTrack].id;
+  prevBtn.dataset.idTrack = playlist[prevTrack].id;
+  nextBtn.dataset.idTrack = playlist[nextTrack].id;
+  likeBtn.dataset.idTrack = id;
 
   deleteActiveClass();
   tracksCard[i].classList.add('track_active');
@@ -208,9 +229,11 @@ const createCard = (cardData) => {
 };
 
 const renderCatalog = (dataList) => {
+  playlist = [...dataList];
   catalogContainer.textContent = '';
   const listCards = dataList.map(createCard);
   catalogContainer.append(...listCards);
+  addHandlerTrack();
 };
 
 const checkCount = (i = 1) => {
@@ -243,9 +266,11 @@ const updateTime = () => {
 };
 
 const init = () => {
+  audio.volume = localStorage.getItem('volume') || 1;
+  playerVolumeInput.value = audio.volume * 100 || 100;
+
   renderCatalog(dataMusic);
   checkCount();
-  addHandlerTrack();
 
   catalogAddBtn.addEventListener('click', () => {
     [...tracksCard].forEach((trackCard) => {
@@ -256,10 +281,59 @@ const init = () => {
 
   prevBtn.addEventListener('click', playMusic);
   nextBtn.addEventListener('click', playMusic);
+
+  audio.addEventListener('ended', () => {
+    nextBtn.click();
+  });
+
   audio.addEventListener('timeupdate', updateTime);
+
   playerProgressInput.addEventListener('change', () => {
     const progress = playerProgressInput.value;
     audio.currentTime = audio.duration * (progress / 1000);
+  });
+
+  headerFavoriteBtn.addEventListener('click', () => {
+    const data = dataMusic.filter((item) => favoriteList.includes(item.id));
+    stopBtn.click();
+    renderCatalog(data);
+    checkCount();
+  });
+  headerLogo.addEventListener('click', () => {
+    stopBtn.click();
+    renderCatalog(dataMusic);
+    checkCount();
+  });
+
+  likeBtn.addEventListener('click', () => {
+    const index = favoriteList.indexOf(likeBtn.dataset.idTrack);
+
+    if (index === -1) {
+      favoriteList.push(likeBtn.dataset.idTrack);
+      likeBtn.classList.add('player__icon_like_active');
+    } else {
+      favoriteList.splice(index, 1);
+      likeBtn.classList.remove('player__icon_like_active');
+    }
+    localStorage.setItem('favorite', JSON.stringify(favoriteList));
+  });
+
+  playerVolumeInput.addEventListener('input', () => {
+    const value = playerVolumeInput.value;
+    audio.volume = value / 100;
+  });
+
+  muteBtn.addEventListener('click', () => {
+    if (audio.volume) {
+      localStorage.setItem('volume', audio.volume);
+      audio.volume = 0;
+      muteBtn.classList.add('player__icon_mute-off');
+      playerVolumeInput.value = 0;
+    } else {
+      muteBtn.classList.remove('player__icon_mute-off');
+      audio.volume = localStorage.getItem('volume');
+      playerVolumeInput.value = audio.volume * 100;
+    }
   });
 };
 
