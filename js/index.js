@@ -1,83 +1,83 @@
 const dataMusic = [
   {
-    id: '1',
+    id: '1qwe',
     artist: 'The weeknd',
     track: 'Save your tears',
     poster: 'img/photo1.jpg',
     mp3: 'audio/The Weeknd - Save Your Tears.mp3',
   },
   {
-    id: '2',
+    id: '2wer',
     artist: 'Imagine Dragons',
     track: 'Follow You',
     poster: 'img/photo2.jpg',
     mp3: 'audio/Imagine Dragons - Follow You.mp3',
   },
   {
-    id: '3',
+    id: '3ert',
     artist: 'Tove Lo',
     track: 'How Long',
     poster: 'img/photo3.jpg',
     mp3: 'audio/Tove Lo - How Long.mp3',
   },
   {
-    id: '4',
+    id: '4rty',
     artist: 'Tom Odell',
     track: 'Another Love',
     poster: 'img/photo4.jpg',
     mp3: 'audio/Tom Odell - Another Love.mp3',
   },
   {
-    id: '5',
+    id: '5tyu',
     artist: 'Lana Del Rey',
     track: 'Born To Die',
     poster: 'img/photo5.jpg',
     mp3: 'audio/Lana Del Rey - Born To Die.mp3',
   },
   {
-    id: '6',
+    id: '6yui',
     artist: 'Adele',
     track: 'Hello',
     poster: 'img/photo6.jpg',
     mp3: 'audio/Adele - Hello.mp3',
   },
   {
-    id: '7',
+    id: '7uio',
     artist: 'Tom Odell',
     track: "Can't Pretend",
     poster: 'img/photo7.jpg',
     mp3: "audio/Tom Odell - Can't Pretend.mp3",
   },
   {
-    id: '8',
+    id: '8iop',
     artist: 'Lana Del Rey',
     track: 'Young And Beautiful',
     poster: 'img/photo8.jpg',
     mp3: 'audio/Lana Del Rey - Young And Beautiful.mp3',
   },
   {
-    id: '9',
+    id: '9opp',
     artist: 'Adele',
     track: 'Someone Like You',
     poster: 'img/photo9.jpg',
     mp3: 'audio/Adele - Someone Like You.mp3',
   },
   {
-    id: '10',
+    id: '10asd',
     artist: 'Imagine Dragons',
     track: 'Natural',
     poster: 'img/photo10.jpg',
     mp3: 'audio/Imagine Dragons - Natural.mp3',
   },
   {
-    id: '11',
+    id: '11sdf',
     artist: 'Drake',
     track: 'Laugh Now Cry Later',
     poster: 'img/photo11.jpg',
     mp3: 'audio/Drake - Laugh Now Cry Later.mp3',
   },
   {
-    id: '12',
+    id: '12dfh',
     artist: 'Madonna',
     track: 'Frozen',
     poster: 'img/photo12.jpg',
@@ -86,12 +86,17 @@ const dataMusic = [
 ];
 
 const audio = new Audio();
+
 const tracksCard = document.getElementsByClassName('track');
 const catalogContainer = document.querySelector('.catalog__container');
 
 const player = document.querySelector('.player');
 const pauseBtn = document.querySelector('.player__controller-pause');
 const stopBtn = document.querySelector('.player__controller-stop');
+const prevBtn = document.querySelector('.player__controller-prev');
+const nextBtn = document.querySelector('.player__controller-next');
+const likeBtn = document.querySelector('.player__controller-like');
+const muteBtn = document.querySelector('.player__controller-mute');
 
 const catalogAddBtn = document.createElement('button');
 catalogAddBtn.classList.add('catalog__btn-add');
@@ -139,15 +144,25 @@ const playMusic = (event) => {
     pausePlayer();
     return;
   }
-
+  let i = 0;
   const id = trackActive.dataset.idTrack;
-  audio.src = dataMusic.find((data) => data.id === id).mp3;
+  const track = dataMusic.find((data, index) => {
+    i = index;
+    return data.id === id;
+  });
+  audio.src = track.mp3;
   audio.play();
   pauseBtn.classList.remove('player__icon_play');
   player.classList.add('player_active');
 
+  const prevTrack = i === 0 ? dataMusic.length - 1 : i - 1;
+  const nextTrack = i === dataMusic.length - 1 ? 0 : i + 1;
+
+  prevBtn.dataset.idTrack = dataMusic[prevTrack].id;
+  nextBtn.dataset.idTrack = dataMusic[nextTrack].id;
+
   deleteActiveClass();
-  trackActive.classList.add('track_active');
+  tracksCard[i].classList.add('track_active');
 };
 
 const addHandlerTrack = () => {
@@ -214,6 +229,9 @@ const init = () => {
     });
     catalogAddBtn.remove();
   });
+
+  prevBtn.addEventListener('click', playMusic);
+  nextBtn.addEventListener('click', playMusic);
 };
 
 init();
