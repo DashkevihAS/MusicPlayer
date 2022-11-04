@@ -99,6 +99,10 @@ const tracksCard = document.getElementsByClassName('track');
 const catalogContainer = document.querySelector('.catalog__container');
 
 const player = document.querySelector('.player');
+
+const trackTitlePlyer = document.querySelector('.track-info__title_plyer');
+const trackArtistPlyer = document.querySelector('.track-info__artist_plyer');
+
 const pauseBtn = document.querySelector('.player__controller-pause');
 const stopBtn = document.querySelector('.player__controller-stop');
 const prevBtn = document.querySelector('.player__controller-prev');
@@ -188,6 +192,8 @@ const playMusic = (event) => {
 
   deleteActiveClass();
   tracksCard[i].classList.add('track_active');
+  trackTitlePlyer.textContent = playlist[i].track;
+  trackArtistPlyer.textContent = playlist[i].artist;
 };
 
 const addHandlerTrack = () => {
@@ -295,9 +301,11 @@ const init = () => {
 
   headerFavoriteBtn.addEventListener('click', () => {
     const data = dataMusic.filter((item) => favoriteList.includes(item.id));
-    stopBtn.click();
-    renderCatalog(data);
-    checkCount();
+    if (data.length) {
+      stopBtn.click();
+      renderCatalog(data);
+      checkCount();
+    }
   });
   headerLogo.addEventListener('click', () => {
     stopBtn.click();
