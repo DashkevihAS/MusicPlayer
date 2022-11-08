@@ -20,6 +20,13 @@
   padding-top: 16px;
   padding-bottom: 16px;
 }
+
+.catalog__empty {
+  padding-top: 100px;
+  margin: 0 auto;
+  font-size: 24px;
+  grid-column: 1/-1;
+}
 @media (max-width: 1024px) {
   .catalog__container {
     padding: 0 14px;
