@@ -311,11 +311,10 @@
 
     headerFavoriteBtn.addEventListener('click', () => {
       const data = dataMusic.filter((item) => favoriteList.includes(item.id));
-      if (data.length) {
-        stopBtn.click();
-        renderCatalog(data);
-      }
+      stopBtn.click();
+      renderCatalog(data);
     });
+
     headerLogo.addEventListener('click', () => {
       stopBtn.click();
       renderCatalog(dataMusic);
